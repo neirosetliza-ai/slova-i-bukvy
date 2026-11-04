@@ -1,0 +1,259 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Слова и буквы</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column of four outlined workbook cards, like the printed sheet, with a progress strip on top */
+:root {
+  --bg: #F3F6FB;
+  --ink: #141A26;
+  --muted: #5B6578;
+  --line: #141A26;
+  --card: #FFFFFF;
+  --accent: #2457F5;
+  --accent-ink: #FFFFFF;
+  --mark: #FFD84D;
+  --mark-ink: #141A26;
+  --ok: #17874F;
+  --ok-bg: #DDF3E6;
+  --bad: #CF3030;
+  --bad-bg: #FBE1E1;
+  --soft: #E6ECF7;
+  --f-display: "Rubik", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F131C; --ink: #EEF2FA; --muted: #9AA5BA; --line: #C9D3E6; --card: #181E2B;
+    --accent: #7E9DFF; --accent-ink: #0F131C; --mark: #FFD84D; --mark-ink: #141A26;
+    --ok: #5DD596; --ok-bg: #12301F; --bad: #FF7A7A; --bad-bg: #3A1A1D; --soft: #222A3B;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F131C; --ink: #EEF2FA; --muted: #9AA5BA; --line: #C9D3E6; --card: #181E2B;
+  --accent: #7E9DFF; --accent-ink: #0F131C; --mark: #FFD84D; --mark-ink: #141A26;
+  --ok: #5DD596; --ok-bg: #12301F; --bad: #FF7A7A; --bad-bg: #3A1A1D; --soft: #222A3B;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.45;
+  padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+header { display: flex; flex-direction: column; gap: 12px; }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(30px, 8vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+.progress { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.dots { display: flex; gap: 6px; }
+.dot { width: 34px; height: 12px; border-radius: 6px; background: var(--soft); border: 2px solid var(--line); }
+.dot.on { background: var(--ok); border-color: var(--ok); }
+.progress-text { font-weight: 600; color: var(--muted); font-size: 15px; }
+
+.ex { background: var(--card); border: 3px solid var(--line); border-radius: 22px; padding: 18px; display: flex; flex-direction: column; gap: 16px; }
+.ex-head { display: flex; gap: 12px; align-items: flex-start; }
+.num { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--mark); color: var(--mark-ink); font-family: var(--f-display); font-weight: 800; font-size: 22px; display: grid; place-items: center; }
+.ex-head h2 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 20px; line-height: 1.25; text-wrap: balance; }
+.hint { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+
+.word { border: 2.5px solid var(--line); border-radius: 14px; padding: 8px 14px; font-family: var(--f-display); font-weight: 700; font-size: 22px; letter-spacing: 0.04em; background: var(--card); text-align: center; min-width: 0; }
+input.ans { width: 100%; min-width: 0; border: 2.5px solid var(--line); border-radius: 14px; padding: 8px 12px; font: 600 22px/1.2 var(--f-display); letter-spacing: 0.04em; text-transform: uppercase; background: var(--card); color: var(--ink); }
+input.ans.ok { border-color: var(--ok); background: var(--ok-bg); }
+input.ans.bad { border-color: var(--bad); background: var(--bad-bg); }
+input.ans.shown { border-style: dashed; background: var(--soft); }
+input.ans:disabled { opacity: 1; -webkit-text-fill-color: var(--ink); background: var(--soft); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* slider exercise */
+.sl-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px 22px; }
+.sl-item { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.sl-word { display: flex; gap: 8px; }
+.sl-word .word { flex: 1 1 0; font-size: 28px; padding: 10px 8px; }
+.slot { border-style: dashed; color: var(--muted); }
+.slot.has { border-style: solid; color: var(--ink); background: var(--soft); }
+.slot.ok { border-style: solid; border-color: var(--ok); background: var(--ok-bg); color: var(--ink); }
+.slot.bad { border-style: solid; border-color: var(--bad); background: var(--bad-bg); color: var(--ink); }
+.slot.shown { border-style: solid; background: var(--soft); color: var(--ink); }
+input.slide { -webkit-appearance: none; appearance: none; width: 100%; height: 40px; background: transparent; margin: 0; cursor: pointer; }
+input.slide::-webkit-slider-runnable-track { height: 14px; border-radius: 7px; background: var(--soft); border: 2px solid var(--line); }
+input.slide::-moz-range-track { height: 10px; border-radius: 7px; background: var(--soft); border: 2px solid var(--line); }
+input.slide::-webkit-slider-thumb { -webkit-appearance: none; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); border: 3px solid var(--line); margin-top: -15px; }
+input.slide::-moz-range-thumb { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); border: 3px solid var(--line); }
+
+/* syllable builder */
+.sl-list { grid-template-columns: 1fr; }
+.eq { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-family: var(--f-display); font-weight: 700; font-size: 24px; color: var(--muted); }
+.eq .word { font-size: 34px; min-width: 76px; padding: 10px 12px; }
+.eq .cons { background: var(--soft); }
+.eq .vow { border-style: dashed; }
+.eq .syl { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.ticks { position: relative; height: 26px; }
+.ticks span { position: absolute; top: 0; transform: translateX(-50%); font: 700 18px/1 var(--f-display); color: var(--muted); }
+.ticks span.cur { color: var(--ink); }
+
+/* flip cards */
+.rev-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+button.flip { font: 700 26px/1.1 var(--f-display); letter-spacing: 0.05em; border: 2.5px solid var(--line); border-radius: 14px; padding: 12px 8px; background: var(--card); color: var(--ink); cursor: pointer; min-height: 78px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+button.flip small { font: 500 14px/1 var(--f-body); letter-spacing: 0.02em; color: var(--muted); }
+button.flip.open { background: var(--ok-bg); border-color: var(--ok); }
+
+.bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+button.btn { font: 700 17px/1 var(--f-display); border: 3px solid var(--line); border-radius: 14px; padding: 13px 20px; cursor: pointer; background: var(--card); color: var(--ink); min-height: 48px; }
+button.btn.main { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button.btn:active { transform: translateY(1px); }
+.result { font-weight: 600; min-height: 1.45em; flex: 1 1 200px; }
+.result.good { color: var(--ok); }
+.result.warn { color: var(--bad); }
+
+.pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; }
+.col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.pair { display: grid; grid-template-columns: minmax(0, 0.9fr) auto minmax(0, 1fr); align-items: center; gap: 8px; }
+.arrow { font-family: var(--f-display); font-weight: 700; font-size: 20px; color: var(--muted); }
+.cols3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.letter-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.letter-chip { align-self: flex-start; width: 52px; height: 52px; border-radius: 14px; border: 3px solid var(--line); display: grid; place-items: center; font-family: var(--f-display); font-weight: 800; font-size: 28px; background: var(--soft); }
+.cell { display: flex; flex-direction: column; gap: 4px; }
+.cell label { font-family: var(--f-display); font-weight: 600; font-size: 14px; color: var(--muted); letter-spacing: 0.05em; }
+.blank { display: inline-block; width: 1.1em; border-bottom: 3px solid var(--accent); transform: translateY(-2px); }
+.cols3 input.ans { font-size: 18px; padding: 8px; }
+
+@media (max-width: 520px) {
+  .pairs { grid-template-columns: 1fr; }
+  .cols3 { grid-template-columns: 1fr 1fr; }
+  .rev-grid { grid-template-columns: 1fr 1fr; }
+  .ex { padding: 14px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  input.ans, .slot, button.flip { transition: background-color .15s, border-color .15s; }
+}
+</style>
+
+<main>
+  <header>
+    <h1>Слова и буквы</h1>
+    <div class="progress">
+      <div class="dots" aria-hidden="true"><span class="dot" id="d1"></span><span class="dot" id="d2"></span><span class="dot" id="d3"></span></div>
+      <span class="progress-text" id="ptext">Сделано 0 из 3</span>
+    </div>
+  </header>
+
+  <section class="ex" aria-labelledby="t1">
+    <div class="ex-head"><div class="num">1</div>
+      <div><h2 id="t1">Соедини согласную с гласной и прочитай слог.</h2>
+      <p class="hint">Двигай ползунок. Гласная меняется, и получается новый слог. Читай его вслух.</p></div></div>
+    <div class="sl-list" id="ex1"></div>
+    <div class="bar">
+      <div class="result" id="res1" role="status" aria-live="polite">Прочитано слогов: 3 из 15</div>
+    </div>
+  </section>
+
+  <section class="ex" aria-labelledby="t2">
+    <div class="ex-head"><div class="num">2</div>
+      <div><h2 id="t2">Замени одну из согласных в слове на Н.</h2>
+      <p class="hint">Придумай новое слово. Потом нажми на карточку и проверь себя.</p></div></div>
+    <div class="rev-grid" id="ex2"></div>
+    <div class="bar">
+      <button class="btn" id="rst2" type="button">Закрыть все</button>
+      <div class="result" id="res2" role="status" aria-live="polite">Открыто 0 из 8</div>
+    </div>
+  </section>
+
+  <section class="ex" aria-labelledby="t3">
+    <div class="ex-head"><div class="num">3</div>
+      <div><h2 id="t3">Прочитай справа налево.</h2>
+      <p class="hint">Прочитай слово вслух с конца. Потом нажми на карточку и проверь себя.</p></div></div>
+    <div class="rev-grid" id="ex3"></div>
+    <div class="bar">
+      <button class="btn" id="rst3" type="button">Закрыть все</button>
+      <div class="result" id="res3" role="status" aria-live="polite">Открыто 0 из 15</div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  var norm = function (s) { return String(s || '').trim().toLowerCase().replace(/ё/g, 'е'); };
+  var done = [false, false, false];
+  function refresh() {
+    var n = 0;
+    for (var i = 0; i < 3; i++) {
+      document.getElementById('d' + (i + 1)).classList.toggle('on', done[i]);
+      if (done[i]) n++;
+    }
+    document.getElementById('ptext').textContent = n === 3 ? 'Все три упражнения сделаны. Молодец!' : 'Сделано ' + n + ' из 3';
+  }
+  function setRes(el, text, kind) { el.className = 'result' + (kind ? ' ' + kind : ''); el.textContent = text; }
+
+  /* exercise 1: consonant + vowel slider */
+  var VOW = ['А', 'О', 'И', 'Ы', 'У'];
+  var CONS = ['Н', 'Т', 'К'];
+  var box1 = document.getElementById('ex1'), res1 = document.getElementById('res1');
+  var seen = CONS.map(function () { return {}; });
+  function total1() {
+    var n = 0, all = true;
+    seen.forEach(function (o) { var k = Object.keys(o).length; n += k; if (k < VOW.length) all = false; });
+    done[0] = all; refresh();
+    if (all) setRes(res1, 'Все 15 слогов прочитаны. Молодец!', 'good'); else setRes(res1, 'Прочитано слогов: ' + n + ' из ' + (CONS.length * VOW.length));
+  }
+  CONS.forEach(function (c, ci) {
+    var item = document.createElement('div'); item.className = 'sl-item';
+    var eq = document.createElement('div'); eq.className = 'eq';
+    var cw = document.createElement('div'); cw.className = 'word cons'; cw.textContent = c;
+    var vw = document.createElement('div'); vw.className = 'word vow';
+    var sy = document.createElement('div'); sy.className = 'word syl';
+    var plus = document.createElement('span'); plus.textContent = '+'; plus.setAttribute('aria-hidden', 'true');
+    var eqs = document.createElement('span'); eqs.textContent = '='; eqs.setAttribute('aria-hidden', 'true');
+    [cw, plus, vw, eqs, sy].forEach(function (n) { eq.appendChild(n); });
+    var r = document.createElement('input');
+    r.type = 'range'; r.min = 0; r.max = VOW.length - 1; r.step = 1; r.value = 0; r.id = 'sl' + ci; r.className = 'slide';
+    r.setAttribute('aria-label', 'Гласная для согласной ' + c);
+    var ticks = document.createElement('div'); ticks.className = 'ticks'; ticks.setAttribute('aria-hidden', 'true');
+    var tspans = VOW.map(function (v, vi) {
+      var t = document.createElement('span'); t.textContent = v;
+      t.style.left = 'calc(20px + (100% - 40px) * ' + (vi / (VOW.length - 1)) + ')';
+      ticks.appendChild(t); return t;
+    });
+    function show() {
+      var v = +r.value;
+      vw.textContent = VOW[v]; sy.textContent = c + VOW[v];
+      r.setAttribute('aria-valuetext', c + VOW[v]);
+      tspans.forEach(function (t, i) { t.classList.toggle('cur', i === v); });
+      seen[ci][v] = true; total1();
+    }
+    r.addEventListener('input', show);
+    item.appendChild(eq); item.appendChild(r); item.appendChild(ticks); box1.appendChild(item);
+    show();
+  });
+
+  /* tap-to-check cards */
+  function makeFlip(boxId, items, resId, rstId, idx, prefix) {
+    var box = document.getElementById(boxId), res = document.getElementById(resId), cards = [];
+    function count() {
+      var n = cards.filter(function (c) { return c.classList.contains('open'); }).length;
+      done[idx] = n === items.length; refresh();
+      if (done[idx]) setRes(res, 'Все слова проверены. Молодец!', 'good'); else setRes(res, 'Открыто ' + n + ' из ' + items.length);
+    }
+    items.forEach(function (it, i) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'flip'; b.id = prefix + i;
+      function front() { b.classList.remove('open'); b.textContent = it[0]; b.setAttribute('aria-label', 'Слово ' + it[0] + '. Нажми, чтобы увидеть ответ'); }
+      b.addEventListener('click', function () {
+        if (b.classList.contains('open')) { front(); } else {
+          b.classList.add('open'); b.innerHTML = it[1] + '<small>было ' + it[0] + '</small>'; b.setAttribute('aria-label', 'Ответ ' + it[1]);
+        }
+        count();
+      });
+      b._front = front; front(); cards.push(b); box.appendChild(b);
+    });
+    document.getElementById(rstId).addEventListener('click', function () { cards.forEach(function (c) { c._front(); }); count(); });
+  }
+  makeFlip('ex2', [['ЛЁД','ЛЁН'],['СЛОГ','СЛОН'],['СОК','СОН'],['СЫР','СЫН'],['ЛУПА','ЛУНА'],['СЕЛО','СЕНО'],['КОРА','НОРА'],['РАМА','РАНА']], 'res2', 'rst2', 1, 'fa');
+  var rev = ['КАМ','КЮЛ','ИРТ','ТИК','ВЕЛ','МОС','ТОК','ОТК','ЛОП','МОК','ЫСУ','АСО','КАР','БОЛ','КАБ'].map(function (w) { return [w, w.split('').reverse().join('')]; });
+  makeFlip('ex3', rev, 'res3', 'rst3', 2, 'fb');
+
+  refresh();
+})();
+</script>
+
+</body></html>
